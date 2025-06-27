@@ -1,0 +1,226 @@
+[
+  {
+    "id": 1,
+    "nom": "Mahsulot 1",
+    "narx": 105000,
+    "razmer": "M",
+    "rasm": "Mahsulot1.jpg"
+  },
+  {
+    "id": 2,
+    "nom": "Mahsulot 2",
+    "narx": 110000,
+    "razmer": "40-44",
+    "rasm": "Mahsulot2.jpg"
+  },
+  {
+    "id": 3,
+    "nom": "Mahsulot 3",
+    "narx": 115000,
+    "razmer": "M",
+    "rasm": "Mahsulot3.jpg"
+  },
+  {
+    "id": 4,
+    "nom": "Mahsulot 4",
+    "narx": 120000,
+    "razmer": "40-44",
+    "rasm": "Mahsulot4.jpg"
+  },
+  {
+    "id": 5,
+    "nom": "Mahsulot 5",
+    "narx": 125000,
+    "razmer": "M",
+    "rasm": "Mahsulot5.jpg"
+  },
+  {
+    "id": 6,
+    "nom": "Mahsulot 6",
+    "narx": 130000,
+    "razmer": "40-44",
+    "rasm": "Mahsulot6.jpg"
+  },
+  {
+    "id": 7,
+    "nom": "Mahsulot 7",
+    "narx": 135000,
+    "razmer": "M",
+    "rasm": "Mahsulot7.jpg"
+  },
+  {
+    "id": 8,
+    "nom": "Mahsulot 8",
+    "narx": 140000,
+    "razmer": "40-44",
+    "rasm": "Mahsulot8.jpg"
+  },
+  {
+    "id": 9,
+    "nom": "Mahsulot 9",
+    "narx": 145000,
+    "razmer": "M",
+    "rasm": "Mahsulot9.jpg"
+  },
+  {
+    "id": 10,
+    "nom": "Mahsulot 10",
+    "narx": 150000,
+    "razmer": "40-44",
+    "rasm": "Mahsulot10.jpg"
+  },
+  {
+    "id": 11,
+    "nom": "Mahsulot 11",
+    "narx": 155000,
+    "razmer": "M",
+    "rasm": "Mahsulot11.jpg"
+  },
+  {
+    "id": 12,
+    "nom": "Mahsulot 12",
+    "narx": 160000,
+    "razmer": "40-44",
+    "rasm": "Mahsulot12.jpg"
+  },
+  {
+    "id": 13,
+    "nom": "Mahsulot 13",
+    "narx": 165000,
+    "razmer": "M",
+    "rasm": "Mahsulot13.jpg"
+  },
+  {
+    "id": 14,
+    "nom": "Mahsulot 14",
+    "narx": 170000,
+    "razmer": "40-44",
+    "rasm": "Mahsulot14.jpg"
+  },
+  {
+    "id": 15,
+    "nom": "Mahsulot 15",
+    "narx": 175000,
+    "razmer": "M",
+    "rasm": "Mahsulot15.jpg"
+  },
+  {
+    "id": 16,
+    "nom": "Mahsulot 16",
+    "narx": 180000,
+    "razmer": "40-44",
+    "rasm": "Mahsulot16.jpg"
+  },
+  {
+    "id": 17,
+    "nom": "Mahsulot 17",
+    "narx": 185000,
+    "razmer": "M",
+    "rasm": "Mahsulot17.jpg"
+  },
+  {
+    "id": 18,
+    "nom": "Mahsulot 18",
+    "narx": 190000,
+    "razmer": "40-44",
+    "rasm": "Mahsulot18.jpg"
+  },
+  {
+    "id": 19,
+    "nom": "Mahsulot 19",
+    "narx": 195000,
+    "razmer": "M",
+    "rasm": "Mahsulot19.jpg"
+  },
+  {
+    "id": 20,
+    "nom": "Mahsulot 20",
+    "narx": 200000,
+    "razmer": "40-44",
+    "rasm": "Mahsulot20.jpg"
+  },
+  {
+    "id": 21,
+    "nom": "Mahsulot 21",
+    "narx": 205000,
+    "razmer": "M",
+    "rasm": "Mahsulot21.jpg"
+  },
+  {
+    "id": 22,
+    "nom": "Mahsulot 22",
+    "narx": 210000,
+    "razmer": "40-44",
+    "rasm": "Mahsulot22.jpg"
+  },
+  {
+    "id": 23,
+    "nom": "Mahsulot 23",
+    "narx": 215000,
+    "razmer": "M",
+    "rasm": "Mahsulot23.jpg"
+  },
+  {
+    "id": 24,
+    "nom": "Mahsulot 24",
+    "narx": 220000,
+    "razmer": "40-44",
+    "rasm": "Mahsulot24.jpg"
+  },
+  {
+    "id": 25,
+    "nom": "Mahsulot 25",
+    "narx": 225000,
+    "razmer": "M",
+    "rasm": "Mahsulot25.jpg"
+  },
+  {
+    "id": 26,
+    "nom": "Mahsulot 26",
+    "narx": 230000,
+    "razmer": "40-44",
+    "rasm": "Mahsulot26.jpg"
+  },
+  {
+    "id": 27,
+    "nom": "Mahsulot 27",
+    "narx": 235000,
+    "razmer": "M",
+    "rasm": "Mahsulot27.jpg"
+  },
+  {
+    "id": 28,
+    "nom": "Mahsulot 28",
+    "narx": 240000,
+    "razmer": "40-44",
+    "rasm": "Mahsulot28.jpg"
+  },
+  {
+    "id": 29,
+    "nom": "Mahsulot 29",
+    "narx": 245000,
+    "razmer": "M",
+    "rasm": "Mahsulot29.jpg"
+  },
+  {
+    "id": 30,
+    "nom": "Mahsulot 30",
+    "narx": 250000,
+    "razmer": "40-44",
+    "rasm": "Mahsulot30.jpg"
+  },
+  {
+    "id": 31,
+    "nom": "Mahsulot 31",
+    "narx": 255000,
+    "razmer": "M",
+    "rasm": "Mahsulot31.jpg"
+  },
+  {
+    "id": 32,
+    "nom": "Mahsulot 32",
+    "narx": 260000,
+    "razmer": "40-44",
+    "rasm": "Mahsulot32.jpg"
+  }
+]
