@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <title>Do'konim</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    .product { border: 1px solid #ccc; margin: 10px 0; padding: 10px; }
+    .btn { padding: 5px 10px; margin-top: 5px; cursor: pointer; background-color: #333; color: white; border: none; border-radius: 4px; }
+    .btn:hover { background-color: #555; }
+    .price { color: red; font-weight: bold; animation: blink 1s infinite; }
+    @keyframes blink {
+      0% { opacity: 1; }
+      50% { opacity: 0.4; }
+      100% { opacity: 1; }
+    }
+    #cart { border-top: 2px dashed #999; margin-top: 30px; padding-top: 15px; }
+    #order-form { margin-top: 20px; }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.8);
+    }
+    .modal-content {
+      margin: 5% auto;
+      display: block;
+      max-width: 90%;
+      max-height: 80vh;
+      border-radius: 10px;
+      box-shadow: 0 0 15px white;
+    }
+    .close {
+      position: absolute;
+      top: 20px;
+      right: 40px;
+      color: white;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Do'konim</h1>
+
+  <div id="products"></div>
+
+  <div id="cart">
+    <h2>Korzinka</h2>
+    <ul id="cart-items"></ul>
+  </div>
+
+  <div id="order-form">
+    <h2>Buyurtma berish</h2>
+    <form onsubmit="submitOrder(event)">
+      <label>Ismingiz: <input type="text" id="name" required /></label><br><br>
+      <label>Telefon raqam: <input type="text" id="phone" required /></label><br><br>
+      <button type="submit" class="btn">Buyurtma berish</button>
+    </form>
+  </div>
+
+  <!-- Rasm kattalashtirish oynasi -->
+  <div id="imgModal" class="modal" onclick="closeModal()">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="modalImage">
+  </div>
+
+  <script>
+    const mahsulotlar = [
+      { id: 1, nom: "Mahsulot 1", narx: 250000, razmer: "40-44", rasm: "Mahsulot1.jpg" },
+      { id: 2, nom: "Mahsulot 2", narx: 150000, razmer: "M", rasm: "Mahsulot2.jpg" }
+    ];
+
+    const cart = [];
+
+    function openModal(img) {
+      const modal = document.getElementById("imgModal");
+      const modalImg = document.getElementById("modalImage");
+      modal.style.display = "block";
+      modalImg.src = img.src;
+    }
+
+    function closeModal() {
+      document.getElementById("imgModal").style.display = "none";
+    }
+
+    function renderProducts() {
+      const container = document.getElementById("products");
+      container.innerHTML = "";
+
+      mahsulotlar.forEach((m) => {
+        const el = document.createElement("div");
+        el.className = "product";
+        el.innerHTML = `
+          <img src="${m.rasm}" alt="${m.nom}" width="120" onclick="openModal(this)"><br>
+          <h3>${m.nom}</h3>
+          <p class="price">Narxi: ${m.narx.toLocaleString()} so'm</p>
+          <p><strong>Razmer:</strong> ${m.razmer}</p>
+          <label>Nechta pachka:
+            <select id="qty-${m.id}">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+          </label><br>
+          <button class="btn" onclick="addToCart(${m.id})">Korzinkaga qo‘shish</button>
+        `;
+        container.appendChild(el);
+      });
+    }
+
+    function addToCart(id) {
+      const item = mahsulotlar.find((m) => m.id === id);
+      const qty = parseInt(document.getElementById("qty-" + id).value);
+      const existing = cart.find(i => i.id === id);
+      if (existing) {
+        existing.qty += qty;
+      } else {
+        cart.push({ ...item, qty });
+      }
+      updateCart();
+    }
+
+    function updateCart() {
+      const list = document.getElementById("cart-items");
+      list.innerHTML = "";
+      cart.forEach((item) => {
+        const li = document.createElement("li");
+        li.textContent = `${item.nom} — ${item.qty} ta — ${(item.narx * item.qty).toLocaleString()} so'm`;
+        list.appendChild(li);
+      });
+    }
+
+    function submitOrder(event) {
+      event.preventDefault();
+      const name = document.getElementById("name").value;
+      const phone = document.getElementById("phone").value;
+
+      if (cart.length === 0) {
+        alert("Iltimos, kamida 1 ta mahsulot tanlang.");
+        return;
+      }
+
+      let message = `🛒 Yangi buyurtma!\n👤 Ism: ${name}\n📞 Tel: ${phone}\n📦 Mahsulotlar:\n`;
+      cart.forEach(item => {
+        message += `- ${item.nom} — ${item.qty} ta\n`;
+      });
+
+      const token = "7574033100:AAGNZ0TLWWUS75faGkN0TZPg58aJ5UQqY4I";
+      const chatId = 1314698716;
+
+      fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: message
+        })
+      })
+      .then(res => {
+        if (res.ok) {
+          alert("✅ Buyurtmangiz Telegram orqali yuborildi!");
+        } else {
+          alert("❌ Xatolik: Telegramga yuborilmadi. Status: " + res.status);
+        }
+      })
+      .catch(err => {
+        alert("❌ Xatolik: Telegramga ulanishda muammo.");
+        console.error(err);
+      });
+
+      // Tozalash
+      cart.length = 0;
+      updateCart();
+      document.getElementById("name").value = "";
+      document.getElementById("phone").value = "";
+    }
+
+    renderProducts();
+  </script>
+</body>
+</html>
