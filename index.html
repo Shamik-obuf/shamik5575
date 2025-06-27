@@ -1,54 +1,105 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-  <meta charset="UTF-8" />
-  <title>Do'konim</title>
+  <meta charset="UTF-8">
+  <title>Erkaklar Oyoq Kiyimlari</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; }
-    .product { border: 1px solid #ccc; margin: 10px 0; padding: 10px; }
-    .btn { padding: 5px 10px; margin-top: 5px; cursor: pointer; background-color: #333; color: white; border: none; border-radius: 4px; }
-    .btn:hover { background-color: #555; }
-    .price { color: red; font-weight: bold; animation: blink 1s infinite; }
-    @keyframes blink {
-      0% { opacity: 1; }
-      50% { opacity: 0.4; }
-      100% { opacity: 1; }
+    body {
+      font-family: times roman, sans-serif;
+      margin: 2;
+      padding: 2;
+      background: #f4f4f4;
     }
-    #cart { border-top: 2px dashed #999; margin-top: 30px; padding-top: 15px; }
-    #order-form { margin-top: 20px; }
+    header {
+      background-color: #222;
+      color: #fff;
+      padding: 15px;
+      text-align: center;
+    }
+    header p {
+      margin: 5px 0 0;
+      font-size: 14px;
+    }
+    #products {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 15px;
+      padding: 20px;
+    }
+    .product {
+      background: white;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .product img {
+      width: 100%;
+      height: auto;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .btn {
+      background: green;
+      color: white;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 5px;
+      margin-top: 5px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .btn:hover { background: darkgreen; }
+    .price {
+      color: red;
+      font-weight: bold;
+    }
+    #cart, #order-form, #admin-panel {
+      padding: 20px;
+      background: white;
+      margin: 20px;
+      border-radius: 10px;
+    }
     .modal {
       display: none;
       position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
       z-index: 999;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.8);
     }
     .modal-content {
-      margin: 5% auto;
       display: block;
+      margin: 5% auto;
       max-width: 90%;
       max-height: 80vh;
-      border-radius: 10px;
-      box-shadow: 0 0 15px white;
     }
     .close {
       position: absolute;
-      top: 20px;
-      right: 40px;
+      top: 20px; right: 40px;
       color: white;
       font-size: 40px;
-      font-weight: bold;
       cursor: pointer;
     }
+    .page-btn {
+      padding: 6px 12px;
+      margin: 5px;
+      border: 1px solid #ccc;
+      background: #eee;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .page-btn.active { background: #bbb; font-weight: bold; }
   </style>
 </head>
 <body>
-  <h1>Do'konim</h1>
+  <header>
+    <h1>Erkaklar Oyoq Kiyimlari</h1>
+    <p>Murojaat uchun: +998 91 245 55 75</p>
+  </header>
 
   <div id="products"></div>
+  <div id="pagination"></div>
 
   <div id="cart">
     <h2>Korzinka</h2>
@@ -58,134 +109,130 @@
   <div id="order-form">
     <h2>Buyurtma berish</h2>
     <form onsubmit="submitOrder(event)">
-      <label>Ismingiz: <input type="text" id="name" required /></label><br><br>
-      <label>Telefon raqam: <input type="text" id="phone" required /></label><br><br>
-      <button type="submit" class="btn">Buyurtma berish</button>
+      <input type="text" id="name" placeholder="Ismingiz" required><br><br>
+      <input type="text" id="phone" placeholder="Telefon raqamingiz" required><br><br>
+      <button type="submit" class="btn">📦 Buyurtma berish</button>
     </form>
   </div>
 
-  <!-- Rasm kattalashtirish oynasi -->
+  <button class="btn" onclick="toggleAdmin()">Admin panelga kirish</button>
+
+  <div id="admin-panel" style="display:none">
+    <h3>Mahsulot qo‘shish</h3>
+    <form onsubmit="addProduct(event)">
+      <input id="p-name" placeholder="Nomi" required>
+      <input id="p-price" type="number" placeholder="Narxi" required>
+      <input id="p-size" placeholder="Razmer" required>
+      <input id="p-img" placeholder="Rasm nomi" required>
+      <button class="btn">➕ Qo‘shish</button>
+    </form>
+  </div>
+
   <div id="imgModal" class="modal" onclick="closeModal()">
     <span class="close">&times;</span>
     <img class="modal-content" id="modalImage">
   </div>
 
   <script>
-    const mahsulotlar = [
-      { id: 1, nom: "Mahsulot 1", narx: 250000, razmer: "40-44", rasm: "Mahsulot1.jpg" },
-      { id: 2, nom: "Mahsulot 2", narx: 150000, razmer: "M", rasm: "Mahsulot2.jpg" }
-    ];
+    let mahsulotlar = JSON.parse(localStorage.getItem("mahsulotlar")) || Array.from({length:20}, (_,i)=>({
+      id: i+1,
+      nom: `Mahsulot ${i+1}`,
+      narx: 50000 + i * 5000,
+      razmer: ["S","M","L","XL"][i%4],
+      rasm: `Mahsulot${i+1}.jpg`
+    }));
 
     const cart = [];
+    const perPage = 10;
+    let currentPage = 1;
 
-    function openModal(img) {
-      const modal = document.getElementById("imgModal");
-      const modalImg = document.getElementById("modalImage");
-      modal.style.display = "block";
-      modalImg.src = img.src;
-    }
+    function render() {
+      const start = (currentPage - 1) * perPage;
+      const end = start + perPage;
+      const visible = mahsulotlar.slice(start, end);
 
-    function closeModal() {
-      document.getElementById("imgModal").style.display = "none";
-    }
-
-    function renderProducts() {
-      const container = document.getElementById("products");
-      container.innerHTML = "";
-
-      mahsulotlar.forEach((m) => {
-        const el = document.createElement("div");
-        el.className = "product";
-        el.innerHTML = `
-          <img src="${m.rasm}" alt="${m.nom}" width="120" onclick="openModal(this)"><br>
+      document.getElementById("products").innerHTML = visible.map(m => `
+        <div class="product">
+          <img src="${m.rasm}" onclick="openModal(this)">
           <h3>${m.nom}</h3>
-          <p class="price">Narxi: ${m.narx.toLocaleString()} so'm</p>
-          <p><strong>Razmer:</strong> ${m.razmer}</p>
-          <label>Nechta pachka:
-            <select id="qty-${m.id}">
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-            </select>
-          </label><br>
+          <p class="price">${m.narx.toLocaleString()} so'm</p>
+          <p>Razmer: ${m.razmer}</p>
+          <select id="qty-${m.id}">${[1,2,3,4,5].map(n=>`<option value="${n}">${n}</option>`)}</select><br>
           <button class="btn" onclick="addToCart(${m.id})">Korzinkaga qo‘shish</button>
-        `;
-        container.appendChild(el);
-      });
+        </div>`).join("");
+
+      const totalPages = Math.ceil(mahsulotlar.length / perPage);
+      document.getElementById("pagination").innerHTML =
+        Array.from({length: totalPages}, (_, i) => `<button class="page-btn ${i+1===currentPage?'active':''}" onclick="goToPage(${i+1})">${i+1}</button>`).join("");
     }
+
+    function goToPage(p) { currentPage = p; render(); }
 
     function addToCart(id) {
-      const item = mahsulotlar.find((m) => m.id === id);
-      const qty = parseInt(document.getElementById("qty-" + id).value);
-      const existing = cart.find(i => i.id === id);
-      if (existing) {
-        existing.qty += qty;
-      } else {
-        cart.push({ ...item, qty });
-      }
+      const item = mahsulotlar.find(m => m.id === id);
+      const qty = +document.getElementById(`qty-${id}`).value;
+      const existing = cart.find(c => c.id === id);
+      if (existing) existing.qty += qty;
+      else cart.push({...item, qty});
       updateCart();
     }
 
     function updateCart() {
-      const list = document.getElementById("cart-items");
-      list.innerHTML = "";
-      cart.forEach((item) => {
-        const li = document.createElement("li");
-        li.textContent = `${item.nom} — ${item.qty} ta — ${(item.narx * item.qty).toLocaleString()} so'm`;
-        list.appendChild(li);
-      });
+      document.getElementById("cart-items").innerHTML =
+        cart.map(i => `<li>${i.nom} — ${i.qty} ta — ${(i.qty*i.narx).toLocaleString()} so'm</li>`).join("");
     }
 
-    function submitOrder(event) {
-      event.preventDefault();
+    function submitOrder(e) {
+      e.preventDefault();
       const name = document.getElementById("name").value;
       const phone = document.getElementById("phone").value;
-
-      if (cart.length === 0) {
-        alert("Iltimos, kamida 1 ta mahsulot tanlang.");
-        return;
-      }
-
-      let message = `🛒 Yangi buyurtma!\n👤 Ism: ${name}\n📞 Tel: ${phone}\n📦 Mahsulotlar:\n`;
-      cart.forEach(item => {
-        message += `- ${item.nom} — ${item.qty} ta\n`;
-      });
-
-      const token = "7574033100:AAGNZ0TLWWUS75faGkN0TZPg58aJ5UQqY4I";
-      const chatId = 1314698716;
-
-      fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      if (cart.length === 0) return alert("Korzinkangiz bo‘sh");
+      let msg = `🛒 Buyurtma\n👤 ${name}\n📞 ${phone}\n`;
+      cart.forEach(i => msg += `- ${i.nom} — ${i.qty} ta\n`);
+      fetch("https://api.telegram.org/bot7574033100:AAGNZ0TLWWUS75faGkN0TZPg58aJ5UQqY4I/sendMessage", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          chat_id: chatId,
-          text: message
-        })
-      })
-      .then(res => {
-        if (res.ok) {
-          alert("✅ Buyurtmangiz Telegram orqali yuborildi!");
-        } else {
-          alert("❌ Xatolik: Telegramga yuborilmadi. Status: " + res.status);
-        }
-      })
-      .catch(err => {
-        alert("❌ Xatolik: Telegramga ulanishda muammo.");
-        console.error(err);
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({chat_id: 1314698716, text: msg})
+      }).then(r => {
+        if (r.ok) alert("✅ Buyurtma yuborildi!");
+        else alert("❌ Xatolik: " + r.status);
       });
-
-      // Tozalash
       cart.length = 0;
       updateCart();
-      document.getElementById("name").value = "";
-      document.getElementById("phone").value = "";
     }
 
-    renderProducts();
+    function openModal(img) {
+      document.getElementById("imgModal").style.display = "block";
+      document.getElementById("modalImage").src = img.src;
+    }
+    function closeModal() {
+      document.getElementById("imgModal").style.display = "none";
+    }
+
+    function toggleAdmin() {
+      const p = prompt("Parolni kiriting:");
+      if (p === "admin123") {
+        document.getElementById("admin-panel").style.display = "block";
+      } else alert("❌ Noto‘g‘ri parol!");
+    }
+
+    function addProduct(e) {
+      e.preventDefault();
+      const nom = document.getElementById("p-name").value;
+      const narx = +document.getElementById("p-price").value;
+      const razmer = document.getElementById("p-size").value;
+      const rasm = document.getElementById("p-img").value;
+      const yangi = {
+        id: Date.now(), nom, narx, razmer, rasm
+      };
+      mahsulotlar.unshift(yangi);
+      localStorage.setItem("mahsulotlar", JSON.stringify(mahsulotlar));
+      render();
+      alert("✅ Mahsulot qo‘shildi");
+      e.target.reset();
+    }
+
+    render();
   </script>
 </body>
 </html>
