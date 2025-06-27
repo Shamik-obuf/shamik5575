@@ -3,7 +3,7 @@
     "id": 1,
     "nom": "Mahsulot 1",
     "narx": 105000,
-    "razmer": "M",
+    "razmer": "40-44",
     "rasm": "Mahsulot1.jpg"
   },
   {
@@ -17,7 +17,7 @@
     "id": 3,
     "nom": "Mahsulot 3",
     "narx": 115000,
-    "razmer": "M",
+    "razmer": "40-44",
     "rasm": "Mahsulot3.jpg"
   },
   {
@@ -31,7 +31,7 @@
     "id": 5,
     "nom": "Mahsulot 5",
     "narx": 125000,
-    "razmer": "M",
+    "razmer": "40-44",
     "rasm": "Mahsulot5.jpg"
   },
   {
